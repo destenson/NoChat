@@ -38,9 +38,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, strong) NOCChatContainerView *containerView;
 @property (nullable, nonatomic, strong) UIImageView *backgroundView;
 
-@property (nullable, nonatomic, strong) NOCChatCollectionView *collectionView;
-@property (nullable, nonatomic, strong) NOCChatCollectionViewLayout *collectionLayout;
-@property (nullable, nonatomic, strong) UIScrollView *collectionViewScrollToTopProxy;
+@property (nonatomic, assign) UIEdgeInsets additionalContentInsets;
+
+@property (nonnull, nonatomic, strong) NOCChatCollectionView *collectionView;
+@property (nonnull, nonatomic, strong) NOCChatCollectionViewLayout *collectionLayout;
+@property (nonnull, nonatomic, strong) UIScrollView *collectionViewScrollToTopProxy;
 
 // Supporting you have only one input panel. If you had custom input panels,
 // this property would be a pointer which point to current panel.

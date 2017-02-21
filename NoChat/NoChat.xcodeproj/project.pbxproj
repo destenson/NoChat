@@ -178,6 +178,7 @@
 					E019EA791E1F359C004706DD = {
 						CreatedOnToolsVersion = 8.2;
 						DevelopmentTeam = YGG9VRRGFV;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -337,6 +338,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.little2s.NoChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -355,6 +357,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.little2s.NoChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

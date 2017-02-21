@@ -395,10 +395,16 @@
     CGFloat topPadding = self.topLayoutGuide.length;
     UIEdgeInsets originalInset = self.collectionView.contentInset;
     UIEdgeInsets inset = originalInset;
+
+    inset.left += self.additionalContentInsets.left;
+    inset.right += self.additionalContentInsets.right;
+
     if (self.isInverted) {
-        inset.bottom = topPadding;
+        inset.top += self.additionalContentInsets.bottom;
+        inset.bottom = topPadding + self.additionalContentInsets.top;
     } else {
-        inset.top = topPadding;
+        inset.bottom += self.additionalContentInsets.bottom;
+        inset.top = topPadding + self.additionalContentInsets.top;
     }
     self.collectionView.contentInset = inset;
 }
