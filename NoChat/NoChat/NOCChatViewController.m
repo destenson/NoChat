@@ -33,7 +33,7 @@
 #import "NOCChatItem.h"
 
 @interface NOCChatViewController ()
-
+@property (nonatomic) UIEdgeInsets contentInset;
 @end
 
 @implementation NOCChatViewController
@@ -194,6 +194,18 @@
     return NO;
 }
 
+#pragma mark - Setters
+
+- (void)setContentInset:(UIEdgeInsets)contentInset {
+    _contentInset = contentInset;
+    [self adjustColletionViewInsets];
+}
+
+- (void)setAdditionalContentInsets:(UIEdgeInsets)additionalContentInsets {
+    _additionalContentInsets = additionalContentInsets;
+    [self adjustColletionViewInsets];
+}
+
 #pragma mark - Getters
 
 - (NSMutableArray<id<NOCChatItemCellLayout>> *)layouts
@@ -213,6 +225,7 @@
 
 - (void)commonInit
 {
+    _contentInset = UIEdgeInsetsZero;
     _inverted = YES;
     _chatInputContainerViewDefaultHeight = 45;
     _scrollFractionalThreshold = 0.05;
@@ -278,7 +291,8 @@
     } else {
         inset.bottom += self.chatInputContainerViewDefaultHeight;
     }
-    _collectionView.contentInset = inset;
+
+    self.contentInset = inset;
 
     if (self.isInverted) {
         _collectionView.transform = CGAffineTransformMake(1, 0, 0, -1, 0, 0);
@@ -393,8 +407,7 @@
 - (void)adjustColletionViewInsets
 {
     CGFloat topPadding = self.topLayoutGuide.length;
-    UIEdgeInsets originalInset = self.collectionView.contentInset;
-    UIEdgeInsets inset = originalInset;
+    UIEdgeInsets inset = self.contentInset;
 
     inset.left += self.additionalContentInsets.left;
     inset.right += self.additionalContentInsets.right;
@@ -406,6 +419,7 @@
         inset.bottom += self.additionalContentInsets.bottom;
         inset.top = topPadding + self.additionalContentInsets.top;
     }
+    
     self.collectionView.contentInset = inset;
 }
 
@@ -416,13 +430,14 @@
     CGFloat contentHeight = self.collectionView.contentSize.height;
     
     UIEdgeInsets originalInset = self.collectionView.contentInset;
+
     UIEdgeInsets inset = originalInset;
     if (self.isInverted) {
-        inset.top = keyboardHeight + inputContainerHeight;
+        inset.top = keyboardHeight + inputContainerHeight + self.additionalContentInsets.bottom;
     } else {
-        inset.bottom = keyboardHeight + inputContainerHeight;
+        inset.bottom = keyboardHeight + inputContainerHeight + self.additionalContentInsets.bottom;
     }
-    
+
     CGPoint originalContentOffset = self.collectionView.contentOffset;
     CGPoint contentOffset = originalContentOffset;
     
@@ -434,9 +449,9 @@
         }
     } else {
         if (self.isInverted) {
-            contentOffset.y += originalInset.top - inset.top;
+            contentOffset.y += originalInset.top - inset.top - self.additionalContentInsets.bottom;
         } else {
-            contentOffset.y += inset.bottom - originalInset.bottom;
+            contentOffset.y += inset.bottom - originalInset.bottom - self.additionalContentInsets.bottom;
         }
         contentOffset.y = MIN(contentOffset.y, contentHeight - self.collectionView.bounds.size.height + inset.bottom);
         contentOffset.y = MAX(contentOffset.y, -inset.top);
@@ -444,13 +459,13 @@
     
     if (duration > DBL_EPSILON) {        
         [UIView animateWithDuration:duration delay:0 options:(animationCurve << 16) | UIViewAnimationOptionBeginFromCurrentState animations:^{
-            self.collectionView.contentInset = inset;
+            self.contentInset = inset;
             if (!CGPointEqualToPoint(contentOffset, originalContentOffset)) {
                 self.collectionView.contentOffset = contentOffset;
             }
         } completion:nil];
     } else {
-        self.collectionView.contentInset = inset;
+        self.contentInset = inset;
         if (!CGPointEqualToPoint(contentOffset, originalContentOffset)) {
             self.collectionView.contentOffset = contentOffset;
         }
@@ -518,7 +533,7 @@
     } else {
         inset.bottom = keyboardHeight + self.inputPanel.frame.size.height;
     }
-    self.collectionView.contentInset = inset;
+    self.contentInset = inset;
     
     CGFloat newContentHeight = 0;
     NSArray *newLayoutAttributes = [self.collectionLayout layoutAttributesForLayouts:self.layouts containerWidth:collectionViewSize.width maxHeight:CGFLOAT_MAX contentHeight:&newContentHeight];
